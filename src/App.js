@@ -1,5 +1,8 @@
 import React, {useState, useEffect } from 'react';
 import './App.css';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
 
 function App() {
   
@@ -7,9 +10,11 @@ function App() {
     fetchData();
   },[]);
 
+  const classes=makeStyles();
   const [names, setNames] = useState([]);
   const [tech, setTech] = useState([]);
   const [ageArr, setAgeArr] = useState([]);
+  const [loading, setLoading] = useState(null)
 
   const fetchData = async () => {
     const nameData = await fetch('http://78.63.13.74:3006/FlowFormaAPI/names');
@@ -37,7 +42,11 @@ function App() {
         const age = Math.floor((date2-date1)/31557600000);
         console.log(age);
         ageArr[i] = age;
-      }       
+      }      
+    }
+    if(ageArr != null){
+    const load = (true);
+      setLoading(load);
     }
     console.log(ageArr);
     console.log(names);
@@ -48,14 +57,12 @@ function App() {
   }
 
 
-
   return (
     <div className="App">
 
     <h1>Name</h1>
     <h1>Tech</h1>
     <h1>Age</h1>
-        
       <div className="name">
           {names.map(name => (
             <p>{name}</p>
@@ -70,6 +77,12 @@ function App() {
             {ageArr.map(ageArrAge => (
               <p>{ageArrAge}</p>
             ))}     
+      </div>
+
+      <div>
+        {loading?loading :<Backdrop className={classes.backdrop} open>
+        <CircularProgress color="inherit" />
+        </Backdrop>}
       </div>
 
                       
